@@ -7,9 +7,21 @@ if(!Me::$loggedIn)
 }
 
 // Make sure you have a username designated
-if(!isset($url[1]) or !$userData = User::getDataByHandle($url[1], "uni_id, handle, display_name"))
+if(!isset($url[1]))
 {
 	header("Location: /"); exit;
+}
+
+// Attempt to retrieve the user
+if(!$userData = User::getDataByHandle($url[1], "uni_id, handle, display_name"))
+{
+	User::silentRegister($url[1]);
+	
+	// Try again to retrieve the recently silent-registered user
+	if(!$userData = User::getDataByHandle($url[1], "uni_id, handle, display_name"))
+	{
+		header("Location: /"); exit;
+	}
 }
 
 // Get the appropriate folder ("General Inbox")

@@ -159,7 +159,7 @@ echo '
 foreach($threadUsers as $tUsr)
 {
 	echo '
-	<div class="participant"><a href="' . $socialCom . '/' . $tUsr['handle'] . '"><img src="' . ProfilePic::image($tUsr['uni_id'], "large") . '" /></a><br /><a href="/' . $tUsr['handle'] . '">@' . $tUsr['handle'] . '</a></div>';
+	<div class="participant"><a href="' . $socialCom . '/' . $tUsr['handle'] . '"><img src="' . ProfilePic::image((int) $tUsr['uni_id'], "large") . '" /></a><br /><a href="/' . $tUsr['handle'] . '">@' . $tUsr['handle'] . '</a></div>';
 }
 	
 echo '

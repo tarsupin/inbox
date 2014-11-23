@@ -36,6 +36,18 @@ if(Form::submitted(SITE_HANDLE . '-folder-thrd'))
 	
 	if($userList = explode(" ", Sanitize::variable($userList, " ")))
 	{
+		if(count($userList) > 10)
+		{
+			Alert::error("Too Many Users", "You can only add a maximum of ten users to a thread.");
+		}
+	}
+	else
+	{
+		Alert::error("Invalid Users", "You have no valid users chosen to deliver the message to.");
+	}
+	
+	if(FormValidate::pass())
+	{
 		list($sqlWhere, $sqlArray) = Database::sqlFilters(array("handle" => $userList));
 		$handleList = array();
 		
@@ -61,10 +73,6 @@ if(Form::submitted(SITE_HANDLE . '-folder-thrd'))
 				}
 			}
 		}
-	}
-	else
-	{
-		Alert::error("Invalid Users", "You have no valid users chosen to deliver the message to.");
 	}
 	
 	// Make sure there are UniID's that you are sending the message to

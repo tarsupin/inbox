@@ -64,7 +64,12 @@ abstract class AppPost {
 		// Update all "read" messages to unread
 		$pass = Database::query("UPDATE threads_users tu INNER JOIN folders f ON f.uni_id=tu.uni_id INNER JOIN folders_threads ft ON ft.folder_id=f.folder_id AND ft.thread_id=? SET f.unread=f.unread+1, f.last_poster=?, f.date_lastPost=?, ft.date_last_post=?, ft.is_read=? WHERE tu.thread_id=? AND tu.uni_id IN (" . $sqlIn . ")", $sqlArray);
 		
-		return Database::endTransaction($pass);
+		if(!Database::endTransaction($pass))
+		{
+			return 0;
+		}
+		
+		return $postID;
 	}
 	
 	
