@@ -1,0 +1,21 @@
+RewriteEngine On
+
+# This allows you to land on a file.
+RewriteCond %{REQUEST_FILENAME} !-f	
+
+# This allows you to land on a directory.
+# RewriteCond %{REQUEST_FILENAME} !-d
+
+# This makes everything route through index.php
+RewriteRule ^(.*)$ index.php [QSA,L]		
+
+# For nginx, you'll need to set this in the appropriate config (e.g. "/etc/nginx/sites-enabled/*")
+# location / {
+#     root    /MY_DIRECTORY_HERE/;
+#     index   index.php;
+#     try_files $uri $uri/ @ci_index;
+# }
+# 
+# location @ci_index{
+#     rewrite ^(.*) /index.php?$1 last;
+# }

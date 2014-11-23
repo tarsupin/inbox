@@ -1,0 +1,142 @@
+
+/************************
+****** Page Layout ******
+************************/
+
+
+/*************************
+****** Forum Styles ******
+*************************/
+
+.overwrap-box { background-color:#d5e4ed; border:solid 1px #c0c0c0; border-radius:4px; padding:6px; margin-bottom:7px; }
+.overwrap-module { background-color:#617B54 !important; }
+.overwrap-module>.overwrap-line { color:white !important; }
+.overwrap-line { padding:0px 2px 0px 2px; font-weight:bold; }
+.overwrap-line>div { display:inline-block; vertical-align:top; }
+
+.overwrap-name { font-size:1.2em; }
+.overwrap-details { }
+
+.inner-box { display:table; border-collapse:collapse; background-color:#e8eef1; border:solid 1px #c0c0c0; border-radius:4px; margin-top:6px; border-bottom:none; width:100%; }
+.inner-line { display:table-row; border-bottom:solid 1px #c0c0c0; height:50px; }
+.inner-line a, .inner-line a:visited { color:#686868 !important; }
+.inner-line a:hover { color:#53aefe !important; }
+
+.inner-name { display:table-cell; vertical-align:top; border-right:solid 1px #c0c0c0; font-weight:bold; color:#56ccc8 !important; padding:5px; }
+.inner-desc { font-weight:normal; font-size:0.8em; color:#5d5d5d; }
+
+.inner-posts { display:table-cell; vertical-align:middle; text-align:center; border-right:solid 1px #c0c0c0; }
+.inner-details { display:table-cell; padding:4px; font-size:0.8em; }
+.inner-details>a { font-weight:bold; }
+
+.inner-paginate { font-size:0.8em; color:white; }
+.inner-paginate>a, .inner-paginate>a:visited { color:white !important; }
+.inner-paginate>a:hover>span { background-color:#cc4040; }
+.inner-paginate>a>span { padding:0 4px 0 4px; background-color:#ee6060; border-radius:3px; }
+
+.sticky-thread { background-color:#FFFFDD; }
+
+
+.new-sub { color: #CD853F; }
+
+@media (min-width:800px) {
+	.overwrap-name { width:60% }
+	.overwrap-posts { width:8%; }
+	.overwrap-details { width:21%; }
+	.inner-name { width:59%; }
+	.inner-posts { width:10%; }
+	.inner-details { width:36%; }
+}
+
+@media (min-width:500px) and (max-width:799px) {
+	.overwrap-name { width:57% }
+	.overwrap-posts { width:10%; }
+	.overwrap-details { width:21%; }
+	.inner-name { width:56%; }
+	.inner-posts { width:11%; }
+	.inner-details { width:36%; }
+}
+
+@media (min-width:350px) and (max-width:499px) {
+	.overwrap-name { width:63% }
+	.overwrap-posts { display:none !important; }
+	.overwrap-details { width:19%; }
+	.inner-name { width:59%; }
+	.inner-posts { display:none !important; }
+	.inner-details { width:36%; }
+}
+
+@media (max-width:349px) {
+	.overwrap-name, .inner-name { width:100% }
+	.overwrap-details, .inner-details, .inner-posts, .overwrap-posts { display:none !important; }
+}
+
+/**************************
+****** Thread Styles ******
+**************************/
+
+.thread-tline { background-color:#77b5db; border-radius:5px; padding:4px; margin-bottom:7px; color:white; font-weight:bold; overflow:hidden; }
+#content .thread-tline a { color:white !important; }
+.thread-tline a:hover { text-decoration:underline !important; }
+
+.thread-page { background-color:rgba(190, 190, 90, 0.6); padding:2px 4px 2px 4px; border-radius:4px; }
+.thread-tline .thread-page:hover { text-decoration:none !important; background-color:rgba(190, 90, 90, 1); }
+.thread-page.thread-page-active { background-color:rgba(250, 90, 90, 1) !important; }
+
+.thread-post { height:100%; width:100%; overflow:hidden; border:solid 1px #c0c0c0; border-radius:5px; background-color:#ffffff; margin-bottom:6px; }
+
+/* Status Bar (Profile Picture, Name, Links) */
+.post-left, .post-left-avatar { float:left; padding:4px; vertical-align:top; border-right:solid 1px #c0c0c0;}
+
+.post-status a { color:#5d5d5d !important; }
+.post-status a:hover { color:#53aefe !important; }
+
+.post-status-top { font-weight:bold; overflow:hidden; }
+.post-status-bottom { margin-top:4px; margin-bottom:8px; font-size:0.8em; overflow:hidden; }
+
+.post-count-row { margin-top:2px; font-size:0.85em; }
+
+.post-like-row { margin-top:2px; font-size:0.85em; }
+.post-like-row img { vertical-align:text-bottom; }
+
+/* Thread Post */
+.post-right, .post-right-avatar { padding:0px 4px 4px 0px; }
+.post-right img, .post-right-avatar img { max-width:100%; }
+
+/* Responsive Threads */
+@media (min-width:800px) {
+	.post-left { width:128px; }
+	.post-left-avatar { width:205px; }
+	.post-right { margin-left:141px; }
+	.post-right-avatar { margin-left:218px; }
+	.post-img { width:128px; }
+	.post-img-avatar { width:205px; }
+}
+
+@media (min-width:500px) and (max-width:799px) {
+	.post-left { width:128px; }
+	.post-left-avatar { width:128px; }
+	.post-right { margin-left:141px; }
+	.post-right-avatar { margin-left:141px; }
+	.post-img { width:128px; }
+	.post-img-avatar { width:128px; }
+}
+
+@media (min-width:0px) and (max-width:499px) {
+	.post-left { width:86px; }
+	.post-left-avatar { width:86px; }
+	.post-right { margin-left:99px; }
+	.post-right-avatar { margin-left:99px; }
+	.post-img { width:86px; }
+	.post-img-avatar { width:86px; }
+	.post-status { display:none; }
+}
+
+/* The Post Option Line */
+.post-options { width:100%; text-align:right; margin-top:4px; }
+
+/**********************
+****** Signature ******
+**********************/
+
+.thread-signature { width:100%; margin-top: 18px; border-top:solid 1px #c0c0c0; max-height:300px; overflow-y:hidden; }

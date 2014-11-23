@@ -1,0 +1,22 @@
+<?php if(!defined("CONF_PATH")) { die("No direct script access allowed."); }
+
+// Require Login
+if(!Me::$loggedIn)
+{
+	Me::redirectLogin("/");
+}
+
+// Make sure you have a username designated
+if(!isset($url[1]) or !$userData = User::getDataByHandle($url[1], "uni_id, handle, display_name"))
+{
+	header("Location: /"); exit;
+}
+
+// Get the appropriate folder ("General Inbox")
+if(!$folderData = AppFolder::getByTitle(Me::$id, "General Inbox"))
+{
+	header("Location: /"); exit;
+}
+
+// Redirect to a new thread with designated individual
+header("Location: /new-thread?folder=" . $folderData['folder_id'] . "&to=" . $userData['handle']);
