@@ -73,7 +73,10 @@ if(Form::submitted(SITE_HANDLE . 'post-thrd'))
 		// If we're editing this post, run the edit script
 		if($editMode)
 		{
-			$post['avi_id'] = (int) $_POST['use_avi'];
+			if(isset($_POST['use_avi']))
+			{
+				$post['avi_id'] = (int) $_POST['use_avi'];
+			}
 
 			if(AppPost::edit($threadID, $post['id'], $_POST['body'], $post['avi_id']))
 			{
