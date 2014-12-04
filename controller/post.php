@@ -73,27 +73,7 @@ if(Form::submitted(SITE_HANDLE . 'post-thrd'))
 		// If we're editing this post, run the edit script
 		if($editMode)
 		{
-			$avatarExists = false;
-			if(isset($_POST['use_avi']))
-			{
-				if((int) $_POST['use_avi'] == 0)
-				{
-					$avatarExists = true;
-				}
-				else
-				{
-					// Check if that avatar is valid
-					$packet = array(
-						"uni_id"	=> $post['uni_id']
-					,	"avi_id"	=> (int) $_POST['use_avi']		// The ID of the avatar to test for
-					);
-					$avatarExists = Connect::to("avatar", "AvatarExists", $packet);
-				}
-			}
-			if($avatarExists)
-			{
-				$post['avi_id'] = (int) $_POST['use_avi'];
-			}
+			$post['avi_id'] = (int) $_POST['use_avi'];
 
 			if(AppPost::edit($threadID, $post['id'], $_POST['body'], $post['avi_id']))
 			{
