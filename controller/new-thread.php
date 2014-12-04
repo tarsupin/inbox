@@ -6,6 +6,12 @@ if(!Me::$loggedIn)
 	Me::redirectLogin("/");
 }
 
+if(Me::$clearance < 2)
+{
+	Alert::saveError("Invalid Permissions", "You must have higher permissions to post threads.");
+	header("Location: /"); exit;
+}
+
 // Make sure you have a valid ID for this folder
 if(!isset($_GET['folder']) or !$folder = AppFolder::get(Me::$id, (int) $_GET['folder']))
 {
@@ -78,7 +84,7 @@ if(Form::submitted(SITE_HANDLE . '-folder-thrd'))
 	// Make sure there are UniID's that you are sending the message to
 	if(!$uniIDList)
 	{
-		Alert::error("No Recipient", "You must have a valid recipient");
+		Alert::error("No Recipient", "You must have a valid recipient.");
 	}
 	
 	if(FormValidate::pass())
@@ -92,8 +98,6 @@ if(Form::submitted(SITE_HANDLE . '-folder-thrd'))
 			if(AppPost::create($threadID, Me::$id, $_POST['body'], (int) Me::$vals['avatar_opt']))
 			{
 				Database::endTransaction();
-				
-				// Add to the recent post list
 				
 				// Display success
 				Alert::saveSuccess("Post Successful", "You have successfully created a new inbox thread.");
@@ -128,6 +132,8 @@ if(isset($_GET['to']) and !$_POST['to'])
 	$_POST['to'] = Sanitize::variable($_GET['to']);
 }
 
+$config['pageTitle'] = $config['site-name'] . " > " . $folder['title'] . " > New Thread";
+
 // Run Global Script
 require(CONF_PATH . "/includes/global.php");
 
@@ -153,17 +159,42 @@ echo '
 	</div>
 	<div style="padding:6px;">
 		<form class="uniform" action="/new-thread?folder=' . $folderID . '" method="post" style="padding-right:20px;">' . Form::prepare(SITE_HANDLE . '-folder-thrd') . '
-			<div><strong>To</strong>:<br /><input type="text" name="to" value="' . trim($_POST['to']) . '" placeholder="JoeSmith, Brandon1, CarmelAppleGuy, ..." style="width:100%;margin-bottom:10px;" autocomplete="off" maxlength="48" tabindex="10" autofocus /></div>
+			<div><strong>To</strong>:<br /><input type="text" name="to" value="' . trim($_POST['to']) . '" placeholder="JoeSmith, Brandon1, CarmelAppleGuy, ..." style="width:100%;margin-bottom:10px;" autocomplete="off" maxlength="240" tabindex="10" autofocus /></div>
 			<div><strong>Title</strong>:<br /><input type="text" name="title" value="' . $_POST['title'] . '" placeholder="Title . . ." style="width:100%;margin-bottom:10px;" autocomplete="off" maxlength="48" tabindex="20" /></div>
 			' . UniMarkup::buttonLine() . '
 			<textarea id="core_text_box" name="body" placeholder="Enter your message here . . ." style="resize:vertical;width:100%;height:300px;" tabindex="30">' . $_POST['body'] . '</textarea>
-			<div style="margin-top:10px;"><input type="submit" name="submit" value="Post New Thread" /></div>
+			<div style="margin-top:10px;"><input type="button" value="Preview" onclick="previewPost();"/> <input type="submit" name="submit" value="Post to Thread" /></div>
+			<div id="preview" class="thread-post" style="display:none; padding:4px; margin-top:10px;"></div>
 		</form>
 	</div>
 </div>';
 
 echo '
-</div>';
+</div>
+<script>
+function previewPost()
+{
+	var text = encodeURIComponent(document.getElementById("core_text_box").value);
+	getAjax("", "preview-post", "parse", "body=" + text);
+}
+function parse(response)
+{
+	if(!response) { response = ""; }
+	
+	document.getElementById("preview").style.display = "block";
+	document.getElementById("preview").innerHTML = response;
+}
+function quotePost(forum, thread, post)
+{
+	getAjax("", "quote-post", "parseadd", "forumID=" + forum, "threadID=" + thread, "postID=" + post);
+}
+function parseadd(response)
+{
+	if(!response) { response = ""; }
+	
+	document.getElementById("core_text_box").value += response + "\n\n";
+}
+</script>';
 
 // Display the Footer
 require(SYS_PATH . "/controller/includes/footer.php");

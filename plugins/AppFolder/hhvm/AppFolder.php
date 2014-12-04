@@ -38,7 +38,7 @@ abstract class AppFolder {
 	,	string $title		// <str> The title of the folder to retrieve.
 	): array <str, mixed>				// RETURNS <str:mixed> the folder's data.
 	
-	// $folderData = AppFolder::get($uniID, $title);
+	// $folderData = AppFolder::getByTitle($uniID, $title);
 	{
 		return Database::selectOne("SELECT * FROM folders WHERE uni_id=? AND title=? LIMIT 1", array($uniID, $title));
 	}
@@ -80,10 +80,16 @@ abstract class AppFolder {
 	// AppFolder::updateDetails($uniID, $folderID);
 	{
 		// Get the last entry in the folder
-		$getFolder = Database::selectOne("SELECT *, t.last_poster_id, t.date_last_post FROM folders_threads ft INNER JOIN threads t ON ft.thread_id=t.id WHERE ft.folder_id=? ORDER BY ft.date_last_post DESC LIMIT 1", array($folderID));
+		$getFolder = Database::selectOne("SELECT t.last_poster_id, t.date_last_post FROM folders_threads ft INNER JOIN threads t ON ft.thread_id=t.id WHERE ft.folder_id=? ORDER BY ft.date_last_post DESC LIMIT 1", array($folderID));
 		
 		// Get the count of unread entries in the forum
 		$count = (int) Database::selectValue("SELECT COUNT(*) as totalNum FROM folders_threads WHERE folder_id=? AND is_read=? LIMIT 1", array($folderID, 0));
+		
+		if($getFolder == array())
+		{
+			$getFolder['last_poster_id'] = 0;
+			$getFolder['date_last_post'] = 0;
+		}
 		
 		// Update the folder entry
 		return Database::query("UPDATE folders SET unread=?, last_poster=?, date_lastPost=? WHERE uni_id=? AND folder_id=? LIMIT 1", array($count, $getFolder['last_poster_id'], $getFolder['date_last_post'], $uniID, $folderID));
@@ -99,6 +105,10 @@ abstract class AppFolder {
 	
 	// AppFolder::displayLine($folder, [$newPost]);
 	{
+		if($folder['unread'] > 0)
+		{
+			$newPost = true;
+		}
 		// Prepare Values
 		echo '
 		<div class="inner-line">
@@ -106,7 +116,7 @@ abstract class AppFolder {
 				<a href="/folder?id=' . $folder['folder_id'] . '">' . ($newPost ? '<img src="' . CDN . '/images/new.png" /> ' :  '') . $folder['title'] . '</a>
 				<div class="inner-desc">' . $folder['description'] . '</div>
 			</div>
-			<div class="inner-details">' . ($folder['handle'] ? '<a href="' . URL::unifaction_social() . '/' . $folder['handle'] . '">' . $folder['display_name'] . '</a><br />' . Time::fuzzy((int) $folder['date_lastPost']) : "") . '</div>
+			<div class="inner-details">' . ($folder['handle'] ? '<a href="' . URL::unifaction_social() . '/' . $folder['handle'] . '">@' . $folder['handle'] . '</a><br />' . Time::fuzzy((int) $folder['date_lastPost']) : "") . '</div>
 		</div>';
 	}
 	

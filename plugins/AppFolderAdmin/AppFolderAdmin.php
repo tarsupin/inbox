@@ -51,7 +51,7 @@ abstract class AppFolderAdmin {
 		// Create the first folder "Inbox"
 		if($nextFolderID = (int) UniqueID::get("folder"))
 		{
-			$pass = Database::query("INSERT INTO `folders` (uni_id, folder_id, sort_order, title, description) VALUES (?, ?, ?, ?, ?)", array($uniID, $folderID, $sortOrder, $title, $description));
+			$pass = Database::query("INSERT INTO `folders` (uni_id, folder_id, sort_order, title, description) VALUES (?, ?, ?, ?, ?)", array($uniID, $nextFolderID, $sortOrder, $title, $description));
 			
 			$lastID = (int) Database::$lastID;
 		}
@@ -94,13 +94,40 @@ abstract class AppFolderAdmin {
 /****** Delete a Folder ******/
 	public static function deleteFolder
 	(
-		$folderID	// <int> The ID of the folder you're deleting.
+		$uniID		// <int> The UniID that owns the folder.
+	,	$folderID	// <int> The ID of the folder you're deleting.
 	)				// RETURNS <bool> TRUE on success, or FALSE on failure.
 	
-	// AppFolderAdmin::deletePost($folderID);
-	{
+	// AppFolderAdmin::deleteFolder(Me::$id, $folderID);
+	{		
+		// Get the appropriate folder ("General Inbox")
+		if(!$folderData = AppFolder::getByTitle($uniID, "General Inbox"))
+		{
+			return false;
+		}
+		
+		// move all threads to the default folder
+		$threads = Database::selectMultiple("SELECT thread_id FROM folders_threads WHERE folder_id=?", array($folderID));
+		
+		Database::startTransaction();		
+		
+		$pass = true;
+		foreach($threads as $thread)
+		{
+			// Move the thread
+			if(!$pass = AppFolderAdmin::moveThread($folderID, (int) $thread['thread_id'], (int) $folderData['folder_id']))
+			{
+				break;
+			}
+		}
+		// Update the details of the folder you're moving to
+		$pass = AppFolder::updateDetails($uniID, (int) $folderData['folder_id']);
+		
+		if(Database::endTransaction($pass))
+		{
+			return Database::query("DELETE FROM folders WHERE uni_id=? AND folder_id=? LIMIT 1", array($uniID, $folderID));
+		}
 		return false;
-		// return Database::query("DELETE FROM folders WHERE id=? LIMIT 1", array($folderID));
 	}
 	
 	
@@ -125,7 +152,9 @@ abstract class AppFolderAdmin {
 		if($pass = Database::query("DELETE FROM folders_threads WHERE folder_id=? AND thread_id=? LIMIT 1", array((int) $folderData['folder_id'], $threadID)))
 		{
 			// Delete the Thread's Posts
-			$pass = Database::query("DELETE FROM threads_users WHERE thread_id=? AND uni_id=?", array($threadID, $uniID));
+			$pass = Database::query("DELETE FROM threads_users WHERE thread_id=? AND uni_id=? LIMIT 1", array($threadID, $uniID));
+			
+			AppFolder::updateDetails($uniID, (int) $folderData['folder_id']);
 		}
 		
 		return Database::endTransaction($pass);
@@ -147,11 +176,12 @@ abstract class AppFolderAdmin {
 		// Delete the Post
 		if($pass = Database::query("DELETE FROM posts WHERE thread_id=? AND id=? AND uni_id=? LIMIT 1", array($threadID, $postID, $uniID)))
 		{
-			$postCount = (int) Database::selectValue("SELECT COUNT(*) as totalNum FROM threads WHERE id=? LIMIT 1", array($threadID));
-			
-			if($postCount > 1)
+			$postCount = (int) Database::selectValue("SELECT COUNT(*) as totalNum FROM posts WHERE thread_id=? AND uni_id=? LIMIT 1", array($threadID, $uniID));
+
+			if($postCount > 0)
 			{
-				$pass = Database::query("UPDATE threads SET posts=posts-1 WHERE id=? LIMIT 1", array($threadID));
+				$lastPost = Database::selectOne("SELECT uni_id, date_post FROM posts WHERE thread_id=? ORDER BY id DESC LIMIT 1", array($threadID));
+				$pass = Database::query("UPDATE threads SET last_poster_id=?, posts=?, date_last_post=? WHERE id=? LIMIT 1", array((int) $lastPost['uni_id'], $postCount, (int) $lastPost['date_post'], $threadID));
 			}
 			else
 			{
@@ -170,6 +200,11 @@ abstract class AppFolderAdmin {
 				if($pass)
 				{
 					$pass = Database::query("DELETE FROM threads WHERE id=? LIMIT 1", array($threadID));
+					
+					if($folderData = AppThread::getFolderData($uniID, $threadID))
+					{
+						AppFolder::updateDetails($uniID, (int) $folderData['folder_id']);
+					}
 				}
 			}
 		}

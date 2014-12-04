@@ -51,59 +51,6 @@ echo '
 	</div>
 </div>';
 
-// Display the Recent Post Modules
-if($recentPosts = AppPost::getRecentPosts())
-{
-	// Prepare Values
-	$hourAgo = time() - 3600;
-	
-	// Begin the HTML
-	echo '
-	<div class="overwrap-box overwrap-module">
-		<div class="overwrap-line">
-			<div class="overwrap-name" style="font-size:1.0em;">Recent Posts</div>
-		</div>
-		<div class="inner-box">';
-	
-	foreach($recentPosts as $post)
-	{
-		// Prepare Values
-		$drawDesc = "";
-		
-		if(strlen($post['body']) >= 255)
-		{
-			$post['body'] .= '...';
-		}
-		
-		// Prepare Pagination
-		if($post['thread_posts'] > 20)
-		{
-			$paginate = new Pagination((int) $post['thread_posts'], 20, 1, "division");
-			
-			foreach($paginate->pages as $page)
-			{
-				$drawDesc .= '
-					<a href="' . $post['post_link'] . '?page=' . $page . '"><span>' . $page . '</span></a>';
-			}
-		}
-		
-		// Draw a recent post line
-		echo '
-			<div class="inner-line">
-				<div class="inner-name">
-					<a href="' . $post['post_link'] . '">' . $post['thread_title'] . '</a>
-					<div class="inner-desc">' . $post['body'] . '</div>
-					<div class="inner-paginate">' . $drawDesc . '</div>
-				</div>
-				<div class="inner-details"><a href="' . URL::unifaction_social() . '/' . $post['poster_handle'] . '">@' . $post['poster_handle'] . '</a>' . (($post['date_posted'] > $hourAgo) ? ' - ' . Time::fuzzy((int) $post['date_posted']) : '') . '<div style="margin-top:6px;">' . $post['thread_posts'] . ' Posts, ' . $post['thread_views'] . ' Views</div></div>
-			</div>';
-	}
-	
-	echo '
-		</div>
-	</div>';
-}
-
 echo '
 </div>';
 

@@ -35,7 +35,7 @@ abstract class AppPost {
 		Database::startTransaction();
 		
 		// Create the post
-		if(!Database::query("INSERT INTO posts (thread_id, id, uni_id, body, date_post) VALUES (?, ?, ?, ?, ?)", array($threadID, $postID, $uniID, $body, $timestamp)))
+		if(!Database::query("INSERT INTO posts (thread_id, id, uni_id, avi_id, body, date_post) VALUES (?, ?, ?, ?, ?, ?)", array($threadID, $postID, $uniID, $aviID, $body, $timestamp)))
 		{
 			Database::endTransaction(false);
 			return 0;
@@ -79,30 +79,12 @@ abstract class AppPost {
 		$threadID		// <int> The ID of the thread the post is in.
 	,	$postID			// <int> The ID of the post you're editing.
 	,	$body			// <str> The new (edited) post message.
+	,	$aviID			// <int> The ID of the avatar to post with.
 	)					// RETURNS <bool> TRUE on success, or FALSE on failure.
 	
 	// AppPost::edit($threadID, $postID, "Hey everyone! Edit: Oh yeah, check out my blog!");
 	{
-		return Database::query("UPDATE posts SET body=? WHERE thread_id=? AND id=?", array($body, $threadID, $postID));
-	}
-	
-	
-/****** Pull data from the recent posts list ******/
-	public static function getRecentPosts (
-	)					// RETURNS <int:[str:mixed]> a list of data pulled from recent posts, array() on failure.
-	
-	// $recentPosts = AppPost::getRecentPosts();
-	{
-		// Check if you should purge any recent posts from the list
-		if(mt_rand(0, 200) == 22 or true)
-		{
-			if($delDate = (int) Database::selectValue("SELECT date_posted FROM posts_recent ORDER BY date_posted DESC LIMIT 6, 1", array()))
-			{
-				Database::query("DELETE FROM posts_recent WHERE date_posted <= ?", array($delDate));
-			}
-		}
-		
-		return Database::selectMultiple("SELECT * FROM posts_recent ORDER BY date_posted DESC LIMIT 5", array());
+		return Database::query("UPDATE posts SET body=?, avi_id=? WHERE thread_id=? AND id=?", array($body, $aviID, $threadID, $postID));
 	}
 	
 }

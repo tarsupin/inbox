@@ -13,7 +13,7 @@ $folder = AppFolder::get(Me::$id, (int) $_GET['id']);
 $folderID = (int) $folder['folder_id'];
 
 // Ensure if you have proper permissions to access this folder
-$clearance = (isset(Me::$vals['clearance']) ? Me::$vals['clearance'] : 0);
+$clearance = (isset(Me::$clearance) ? Me::$clearance : 0);
 
 // Prepare Values
 $page = (isset($_GET['page']) ? (int) $_GET['page'] : 1);
@@ -23,7 +23,7 @@ $postsPerPage = 20;
 
 if($page > 1)
 {
-	$pageList = '<a href="/folder?id=' . $folderID . '&page=' . ($page - 1) . '">Previous Page</a>';
+	$pageList = '<a href="/folder?id=' . $folderID . '&page=' . ($page - 1) . '"><span class="icon-arrow-left"></span> Previous Page</a>';
 }
 
 $socialURL = URL::social_unifaction_com();
@@ -33,9 +33,11 @@ $threads = AppFolder::getThreads($folderID, $page, $threadsToShow);
 
 if(count($threads) > $threadsToShow)
 {
-	$pageList = '<a href="/folder?id=' . $folderID . '&page=' . ($page + 1) . '">Next Page</a>';
+	$pageList = '<a href="/folder?id=' . $folderID . '&page=' . ($page + 1) . '">Next Page <span class="icon-arrow-right"></span></a>';
 	array_pop($threads);
 }
+
+$config['pageTitle'] = $config['site-name'] . " > " . $folder['title'];
 
 // Run Global Script
 require(CONF_PATH . "/includes/global.php");
@@ -56,9 +58,13 @@ echo '
 <div class="thread-tline"><a href="/">Home</a> &gt; ' . $folder['title'] . '</div>';
 
 echo '
-<div class="thread-tline">
-	<a href="/new-thread?folder=' . $folderID . '">New Thread</a>
-	' . ($pageList ? '<div style="float:right;">' . $pageList . '</div>' : "") .'
+<div class="thread-tline">';
+if(Me::$clearance >= 2)
+{
+	echo '
+	<a href="/new-thread?folder=' . $folderID . '">New Thread</a>';
+}
+echo ($pageList ? '<div style="float:right;">' . $pageList . '</div>' : "") .'
 </div>';
 
 echo '
@@ -94,11 +100,11 @@ foreach($threads as $thread)
 	echo '
 	<div class="inner-line">
 		<div class="inner-name">
-			<a href="/thread?id=' . $thread['id'] . 'page=' . $page . '">' . (!$thread['is_read'] ? '<img src="' . CDN . '/images/new.png" /> ' :  '') . $thread['title'] . '</a>
+			<a href="/thread?id=' . $thread['id'] . 'page=' . $page . '">' . (!$thread['is_read'] ? '<img src="' . CDN . '/images/new.png" /> ' :  '') . $thread['title'] . '</a> <a title="last post" href="/thread?id=' . $thread['id'] . '&page=last"><span class="icon-arrow-right"></span></a>
 			<div class="inner-paginate">' . $drawDesc . '</div>
 		</div>
 		<div class="inner-posts">' . $thread['posts'] . '</div>
-		<div class="inner-details"><a href="' . $socialURL . '/' . $thread['handle'] . '">' . $thread['display_name'] . '</a><br />' . Time::fuzzy((int) $thread['date_last_post']) . '</div>
+		<div class="inner-details"><a href="' . $socialURL . '/' . $thread['handle'] . '">@' . $thread['handle'] . '</a><br />' . Time::fuzzy((int) $thread['date_last_post']) . '</div>
 	</div>';
 }
 
@@ -107,9 +113,13 @@ echo '
 </div>';
 
 echo '
-<div class="thread-tline">
-	<a href="/new-thread?folder=' . $folderID . '">New Thread</a>
-	' . ($pageList ? '<div style="float:right;">' . $pageList . '</div>' : "") .'
+<div class="thread-tline">';
+if(Me::$clearance >= 2)
+{
+	echo '
+	<a href="/new-thread?folder=' . $folderID . '">New Thread</a>';
+}
+echo ($pageList ? '<div style="float:right;">' . $pageList . '</div>' : "") .'
 </div>';
 
 echo '

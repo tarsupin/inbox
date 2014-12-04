@@ -17,7 +17,7 @@ $posts = AppThread::getPosts($threadID, [$page], [$numRows]);
 
 $threadID = AppThread::create($folder, $uniID, $title, $sticky);
 
-AppThread::edit($folderID, $threadID, $title, $sticky);
+AppThread::edit($threadID, $title);
 
 */
 
@@ -84,7 +84,7 @@ abstract class AppThread {
 	
 	// $threadUsers = AppThread::getUsers($threadID);
 	{
-		return Database::selectMultiple("SELECT u.uni_id, u.handle, u.display_name FROM threads_users tu INNER JOIN users u ON tu.uni_id=u.uni_id WHERE tu.thread_id=?", array($threadID));
+		return Database::selectMultiple("SELECT u.uni_id, u.handle, u.display_name, u.role FROM threads_users tu INNER JOIN users u ON tu.uni_id=u.uni_id WHERE tu.thread_id=?", array($threadID));
 	}
 	
 	
@@ -128,6 +128,8 @@ abstract class AppThread {
 		{
 			$uniIDList[] = $uniID;
 		}
+		
+		$uniIDList = array_unique($uniIDList);
 		
 		Database::startTransaction();
 		
@@ -194,15 +196,13 @@ abstract class AppThread {
 /****** Edit an existing Thread ******/
 	public static function edit
 	(
-		int $folderID		// <int> The folder ID that contains the thread you're editing.
-	,	int $threadID		// <int> The ID of the thread you're editing.
+		int $threadID		// <int> The ID of the thread you're editing.
 	,	string $title			// <str> The title of the thread.
-	,	int $sticky = 0		// <int> The level of sticky importance (0 to 9).
 	): bool					// RETURNS <bool> TRUE on success, or FALSE on failure.
 	
-	// AppThread::edit($folderID, $threadID, $title, $sticky);
+	// AppThread::edit($threadID, $title);
 	{
-		
+		return Database::query("UPDATE threads SET title=? WHERE id=? LIMIT 1", array($title, $threadID));
 	}
 	
 	
@@ -229,6 +229,37 @@ abstract class AppThread {
 	// AppThread::markAsUnread($uniID, $threadID);
 	{
 		return Database::query("UPDATE threads_users tu INNER JOIN folders f ON f.uni_id=tu.uni_id INNER JOIN folders_threads ft ON ft.folder_id=f.folder_id AND ft.thread_id=? SET f.unread=f.unread+1, ft.is_read=? WHERE tu.thread_id=? AND tu.uni_id=? AND ft.is_read=?", array($threadID, 0, $threadID, $uniID, 1));
+	}
+	
+
+/****** Get a user's avatar name ******/
+	public static function getName
+	(
+		int $uniID			// <int> The UniID of the user to retrieve the signature of.
+	,	int $aviID			// <int> The ID of the avatar to get the name of.
+	): string					// RETURNS <str> The name for the avatar.
+	
+	// $aviname = AppForum::getName($uniID, $aviID);
+	{
+		if($aviID == 0)
+		{
+			return "";
+		}
+		
+		$name = Database::selectOne("SELECT avatar_list FROM settings WHERE uni_id=? LIMIT 1", array($uniID));
+		if($name['avatar_list'] != "")
+		{
+			$name = json_decode($name['avatar_list'], true);
+			if(isset($name[$aviID]))
+			{
+				if($name[$aviID] != "")
+				{
+					return $name[$aviID];
+				}
+			}
+		}
+		
+		return "";
 	}
 	
 }

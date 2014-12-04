@@ -70,6 +70,7 @@ if(Form::submitted("move-thread"))
 	}
 }
 
+$config['pageTitle'] = $config['site-name'] . " > Move Thread";
 
 // Run Global Script
 require(CONF_PATH . "/includes/global.php");
