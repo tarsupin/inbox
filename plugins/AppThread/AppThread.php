@@ -258,7 +258,7 @@ abstract class AppThread {
 				$name = json_decode($name['avatar_list'], true);
 				if(isset($name[$aviID]))
 				{
-					Cache::set($uniID . "-" . $aviID . "-avi-name", $name['aviID'], 60 * 60);
+					Cache::set($uniID . "-" . $aviID . "-avi-name", $name[$aviID], 60 * 60);
 					if($name[$aviID] != "")
 					{
 						return $name[$aviID];
