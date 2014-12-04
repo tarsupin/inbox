@@ -246,15 +246,23 @@ abstract class AppThread {
 			return "";
 		}
 		
-		$name = Database::selectOne("SELECT avatar_list FROM settings WHERE uni_id=? LIMIT 1", array($uniID));
-		if($name['avatar_list'] != "")
+		if($name = Cache::get($uniID . "-" . $aviID . "-avi-name"))
 		{
-			$name = json_decode($name['avatar_list'], true);
-			if(isset($name[$aviID]))
+			return $name;
+		}
+		
+		if($name = Database::selectOne("SELECT avatar_list FROM settings WHERE uni_id=? LIMIT 1", array($uniID)))
+		{
+			if($name['avatar_list'] != "")
 			{
-				if($name[$aviID] != "")
+				$name = json_decode($name['avatar_list'], true);
+				if(isset($name[$aviID]))
 				{
-					return $name[$aviID];
+					Cache::set($uniID . "-" . $aviID . "-avi-name", $name['aviID'], 60 * 60);
+					if($name[$aviID] != "")
+					{
+						return $name[$aviID];
+					}
 				}
 			}
 		}
