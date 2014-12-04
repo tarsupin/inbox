@@ -22,6 +22,8 @@ if(!$userData = User::getDataByHandle($url[1], "uni_id, handle, display_name"))
 	{
 		header("Location: /"); exit;
 	}
+	
+	AppFolder::generateDefaultFolders((int) $userData['uni_id']);
 }
 
 // Get the appropriate folder ("General Inbox")

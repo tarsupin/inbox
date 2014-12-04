@@ -51,11 +51,12 @@ if(!$getList = Database::selectOne("SELECT uni_id, handle FROM users_handles WHE
 	User::silentRegister($_POST['participant']);
 	if(!$check = (int) Database::selectValue("SELECT uni_id FROM users_handles WHERE handle=? LIMIT 1", array($_POST['participant'])))
 	{
-		Alert::saveError($user . " Invalid", "The user @" . $_POST['participant'] . " was not located.");
+		Alert::saveError("Invalid", "The user @" . $_POST['participant'] . " was not located.");
 		echo "error";
 		exit;
 	}
 	$user = $check;
+	AppFolder::generateDefaultFolders($user);
 }
 else
 {

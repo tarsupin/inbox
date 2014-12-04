@@ -73,9 +73,13 @@ if(Form::submitted(SITE_HANDLE . '-folder-thrd'))
 			{
 				User::silentRegister($user);
 				
-				if(!$check = Database::selectValue("SELECT uni_id FROM users_handles WHERE handle=? LIMIT 1", array($user)))
+				if(!$check = (int) Database::selectValue("SELECT uni_id FROM users_handles WHERE handle=? LIMIT 1", array($user)))
 				{
-					Alert::error($user . " Invalid", "The user @" . $user . " was not located.");
+					Alert::error("Invalid", "The user @" . $user . " was not located.");
+				}
+				else
+				{
+					AppFolder::generateDefaultFolders($check);
 				}
 			}
 		}
