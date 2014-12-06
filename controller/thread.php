@@ -279,7 +279,7 @@ foreach($posts as $post)
 			
 			echo '
 			</div>
-			' . nl2br(UniMarkup::parse($post['body']));
+			' . html_entity_decode(nl2br(UniMarkup::parse($post['body'])));
 			
 			if($post['signature'])
 			{
