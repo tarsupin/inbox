@@ -32,7 +32,7 @@ abstract class AppThread {
 	
 	// $threadData = AppThread::get($threadID);
 	{
-		return Database::selectOne("SELECT t.*, u.handle, u.display_name FROM threads t INNER JOIN users u ON t.last_poster_id=u.uni_id WHERE id=? LIMIT 1", array($threadID));
+		return Database::selectOne("SELECT t.*, u.handle, u.display_name, u.role FROM threads t INNER JOIN users u ON t.last_poster_id=u.uni_id WHERE id=? LIMIT 1", array($threadID));
 	}
 	
 	
@@ -46,7 +46,7 @@ abstract class AppThread {
 	
 	// $posts = AppThread::getPosts($threadID, [$page], [$numRows]);
 	{
-		return Database::selectMultiple("SELECT p.*, s.signature, u.handle, u.display_name, u.date_joined FROM posts p LEFT JOIN settings s ON p.uni_id=s.uni_id INNER JOIN users u ON p.uni_id=u.uni_id WHERE p.thread_id=? ORDER BY p.id ASC LIMIT " . (($page - 1) * $numRows) . ', ' . ($numRows + 0), array($threadID));
+		return Database::selectMultiple("SELECT p.*, s.signature, u.handle, u.display_name, u.role, u.date_joined FROM posts p LEFT JOIN settings s ON p.uni_id=s.uni_id INNER JOIN users u ON p.uni_id=u.uni_id WHERE p.thread_id=? ORDER BY p.id ASC LIMIT " . (($page - 1) * $numRows) . ', ' . ($numRows + 0), array($threadID));
 	}
 	
 	

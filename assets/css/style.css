@@ -13,7 +13,7 @@
 
 .inner-box { display:table; border-collapse:collapse; background-color:#e8eef1; border:solid 1px #c0c0c0; border-radius:4px; margin-top:6px; border-bottom:none; width:100%; }
 .inner-line { display:table-row; border-bottom:solid 1px #c0c0c0; height:50px; }
-.inner-line a, .inner-line a:visited { color:#686868 !important; }
+.inner-line a:not([class|=role]), .inner-line a:visited:not([class|=role]) { color:#686868 !important; }
 .inner-line a:hover { color:#53aefe !important; }
 
 .inner-name { display:table-cell; vertical-align:top; border-right:solid 1px #c0c0c0; font-weight:bold; color:#56ccc8 !important; padding:5px; }
@@ -81,7 +81,7 @@
 /* Status Bar (Profile Picture, Name, Links) */
 .post-left, .post-left-avatar { float:left; padding:4px; vertical-align:top; border-right:solid 1px #c0c0c0;}
 
-.post-status a { color:#5d5d5d !important; }
+.post-status a:not([class|=role]), .post-status a:visited:not([class|=role]) { color:#5d5d5d !important; }
 .post-status a:hover { color:#53aefe !important; }
 
 .post-status-top { font-weight:bold; overflow:hidden; }

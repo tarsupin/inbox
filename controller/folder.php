@@ -104,7 +104,7 @@ foreach($threads as $thread)
 			<div class="inner-paginate">' . $drawDesc . '</div>
 		</div>
 		<div class="inner-posts">' . $thread['posts'] . '</div>
-		<div class="inner-details"><a href="' . $socialURL . '/' . $thread['handle'] . '">@' . $thread['handle'] . '</a><br />' . Time::fuzzy((int) $thread['date_last_post']) . '</div>
+		<div class="inner-details"><a ' . ($thread['role'] != '' ? 'class="role-' . $thread['role'] . '" ' : '') . 'href="' . $socialURL . '/' . $thread['handle'] . '">@' . $thread['handle'] . '</a><br />' . Time::fuzzy((int) $thread['date_last_post']) . '</div>
 	</div>';
 }
 

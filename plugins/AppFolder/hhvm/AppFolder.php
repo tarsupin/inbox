@@ -27,7 +27,7 @@ abstract class AppFolder {
 	
 	// $folderData = AppFolder::get($uniID, $folderID);
 	{
-		return Database::selectOne("SELECT * FROM folders WHERE uni_id=? AND folder_id=? LIMIT 1", array($uniID, $folderID));
+		return Database::selectOne("SELECT * FROM folders f INNER JOIN users u ON f.last_poster=u.uni_id WHERE f.uni_id=? AND folder_id=? LIMIT 1", array($uniID, $folderID));
 	}
 	
 	
@@ -52,7 +52,7 @@ abstract class AppFolder {
 	
 	// $folders = AppFolder::getList($uniID);
 	{
-		return Database::selectMultiple("SELECT f.*, u.handle, u.display_name FROM folders f LEFT JOIN users u ON f.last_poster = u.uni_id WHERE f.uni_id=? ORDER BY f.folder_id ASC", array($uniID));
+		return Database::selectMultiple("SELECT f.*, u.handle, u.display_name, u.role FROM folders f LEFT JOIN users u ON f.last_poster = u.uni_id WHERE f.uni_id=? ORDER BY f.folder_id ASC", array($uniID));
 	}
 	
 	
@@ -66,7 +66,7 @@ abstract class AppFolder {
 	
 	// $threads = AppFolder::getThreads($folderID, [$page], [$numRows]);
 	{
-		return Database::selectMultiple("SELECT ft.is_read, t.*, u.handle, u.display_name FROM folders_threads ft INNER JOIN threads t ON ft.thread_id=t.id  INNER JOIN users u ON t.last_poster_id=u.uni_id WHERE ft.folder_id=? ORDER BY ft.date_last_post DESC LIMIT " . (($page - 1) * $numRows) . ', ' . ($numRows + 0), array($folderID));
+		return Database::selectMultiple("SELECT ft.is_read, t.*, u.handle, u.display_name, u.role FROM folders_threads ft INNER JOIN threads t ON ft.thread_id=t.id  INNER JOIN users u ON t.last_poster_id=u.uni_id WHERE ft.folder_id=? ORDER BY ft.date_last_post DESC LIMIT " . (($page - 1) * $numRows) . ', ' . ($numRows + 0), array($folderID));
 	}
 	
 	
@@ -116,7 +116,7 @@ abstract class AppFolder {
 				<a href="/folder?id=' . $folder['folder_id'] . '">' . ($newPost ? '<img src="' . CDN . '/images/new.png" /> ' :  '') . $folder['title'] . '</a>
 				<div class="inner-desc">' . $folder['description'] . '</div>
 			</div>
-			<div class="inner-details">' . ($folder['handle'] ? '<a href="' . URL::unifaction_social() . '/' . $folder['handle'] . '">@' . $folder['handle'] . '</a><br />' . Time::fuzzy((int) $folder['date_lastPost']) : "") . '</div>
+			<div class="inner-details">' . ($folder['handle'] ? '<a ' . ($folder['role'] != '' ? 'class="role-' . $folder['role'] . '" ' : '') . 'href="' . URL::unifaction_social() . '/' . $folder['handle'] . '">@' . $folder['handle'] . '</a><br />' . Time::fuzzy((int) $folder['date_lastPost']) : "") . '</div>
 		</div>';
 	}
 	
