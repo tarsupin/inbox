@@ -66,7 +66,7 @@ abstract class AppFolder {
 	
 	// $threads = AppFolder::getThreads($folderID, [$page], [$numRows]);
 	{
-		return Database::selectMultiple("SELECT ft.is_read, t.*, u.handle, u.display_name, u.role FROM folders_threads ft INNER JOIN threads t ON ft.thread_id=t.id  INNER JOIN users u ON t.last_poster_id=u.uni_id WHERE ft.folder_id=? ORDER BY ft.date_last_post DESC LIMIT " . (($page - 1) * $numRows) . ', ' . ($numRows + 0), array($folderID));
+		return Database::selectMultiple("SELECT ft.is_read, t.*, u.handle, u.display_name, u.role FROM folders_threads ft INNER JOIN threads t ON ft.thread_id=t.id  INNER JOIN users u ON t.last_poster_id=u.uni_id WHERE ft.folder_id=? ORDER BY ft.date_last_post DESC LIMIT " . (($page - 1) * $numRows) . ', ' . ($numRows + 1), array($folderID));
 	}
 	
 	

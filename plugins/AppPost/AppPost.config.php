@@ -51,6 +51,7 @@ class AppPost_config {
 			`post_id`				int(10)			unsigned	NOT NULL	DEFAULT '0',
 			
 			`poster_handle`			varchar(22)					NOT NULL	DEFAULT '',
+			`role`					varchar(12)					NOT NULL	DEFAULT '',
 			
 			`body`					varchar(255)				NOT NULL	DEFAULT '',
 			

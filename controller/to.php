@@ -13,12 +13,12 @@ if(!isset($url[1]))
 }
 
 // Attempt to retrieve the user
-if(!$userData = User::getDataByHandle($url[1], "uni_id, handle, display_name"))
+if(!$userData = User::getDataByHandle($url[1], "uni_id, handle"))
 {
 	User::silentRegister($url[1]);
 	
 	// Try again to retrieve the recently silent-registered user
-	if(!$userData = User::getDataByHandle($url[1], "uni_id, handle, display_name"))
+	if(!$userData = User::getDataByHandle($url[1], "uni_id, handle"))
 	{
 		header("Location: /"); exit;
 	}

@@ -18,11 +18,12 @@ $_POST['threadID'] = (int) $_POST['threadID'];
 $thread = AppThread::get($_POST['threadID']);
 
 // Check permission
-if($thread['owner_id'] != Me::$id)
+if($thread['owner_id'] != Me::$id && Me::$clearance < 6)
 {
 	exit;
 }
 
+$_POST['title'] = trim($_POST['title']);
 $_POST['title'] = Sanitize::safeword($_POST['title'], "'/\"!?@#$%^&*()[]+={}");
 
 if(AppThread::edit($_POST['threadID'], $_POST['title']))

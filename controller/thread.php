@@ -24,7 +24,10 @@ if(!AppThread::allowedAccess(Me::$id, $threadID))
 }
 
 // Mark the thread as read
-AppThread::markAsRead(Me::$id, $threadID);
+if(AppThread::markAsRead(Me::$id, $threadID))
+{
+	AppFolder::updateDetails(Me::$id, (int) $folderData['folder_id']);
+}
 
 // Prepare Values
 $postsPerPage = 20;
@@ -79,6 +82,7 @@ if(isset($_GET['action']))
 	{
 		if(AppThread::markAsUnread(Me::$id, $threadID))
 		{
+			AppFolder::updateDetails(Me::$id, (int) $folderData['folder_id']);
 			header("Location: /folder?id=" . $folderData['folder_id']); exit;
 		}
 	}

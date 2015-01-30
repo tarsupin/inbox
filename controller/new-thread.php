@@ -8,7 +8,7 @@ if(!Me::$loggedIn)
 
 if(Me::$clearance < 2)
 {
-	Alert::saveError("Invalid Permissions", "You must have higher permissions to post threads.");
+	Alert::saveError("Invalid Permissions", "You must have higher permissions to create threads.");
 	header("Location: /"); exit;
 }
 
@@ -22,12 +22,13 @@ if(!isset($_GET['folder']) or !$folder = AppFolder::get(Me::$id, (int) $_GET['fo
 $folderID = (int) $folder['folder_id'];
 
 // Prepare Variables
-$_POST['body'] = (isset($_POST['body']) ? Security::purify($_POST['body']) : "");
-$userList = array(1, 2);
+$_POST['body'] = isset($_POST['body']) ? Security::purify($_POST['body']) : '';
 
 // Create the thread
 if(Form::submitted(SITE_HANDLE . '-folder-thrd'))
 {
+	$_POST['title'] = trim($_POST['title']);
+	$_POST['body'] = trim($_POST['body']);
 	FormValidate::text("Title", $_POST['title'], 1, 48);
 	
 	if(strlen($_POST['body']) < 1)

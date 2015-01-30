@@ -18,7 +18,7 @@ $_POST['threadID'] = (int) $_POST['threadID'];
 $thread = AppThread::get($_POST['threadID']);
 
 // Check permission
-if($thread['owner_id'] != Me::$id)
+if($thread['owner_id'] != Me::$id && Me::$clearance < 6)
 {
 	exit;
 }
@@ -73,7 +73,7 @@ if($pass = Database::query("REPLACE INTO threads_users (thread_id, uni_id) VALUE
 	}
 	else
 	{
-		$pass = Database::query("INSERT INTO folders_threads (folder_id, thread_id, date_last_post) VALUES (?, ?, ?)", array((int) $folderData['folder_id'], $_POST['threadID'], $thread['date_last_post']));
+		$pass = Database::query("INSERT INTO folders_threads (folder_id, thread_id, date_last_post, is_read) VALUES (?, ?, ?, ?)", array((int) $folderData['folder_id'], $_POST['threadID'], $thread['date_last_post'], 0));
 		AppFolder::updateDetails($user, (int) $folderData['folder_id']);
 		Notifications::create($user, URL::inbox_unifaction_com() . "/thread?id=" . $_POST['threadID'], "You've been added to an inbox thread by @" . Me::$vals['handle'] . ".");
 	}

@@ -64,6 +64,18 @@ abstract class AppPost {
 		// Update all "read" messages to unread
 		$pass = Database::query("UPDATE threads_users tu INNER JOIN folders f ON f.uni_id=tu.uni_id INNER JOIN folders_threads ft ON ft.folder_id=f.folder_id AND ft.thread_id=? SET f.unread=f.unread+1, f.last_poster=?, f.date_lastPost=?, ft.date_last_post=?, ft.is_read=? WHERE tu.thread_id=? AND tu.uni_id IN (" . $sqlIn . ")", $sqlArray);
 		
+		// Add to the recent threads
+		$thread = AppThread::get($threadID);
+		$userData = User::get($uniID, "handle, role");
+
+		$values = array();
+		foreach($threadUsers as $user)
+		{
+			$values[] = '(' . $user['uni_id'] . ', ' . $timestamp . ', "' . $thread['title'] . '", ' . $thread['posts'] . ', "/thread?id=' . $threadID . '", ' . $postID . ', "' . $userData['handle'] . '", "' . $userData['role'] . '", "' . substr(UniMarkup::strip($body), 0, 255) . '")';
+		}
+		
+		Database::query("INSERT INTO posts_recent (uni_id, date_posted, thread_title, thread_posts, post_link, post_id, poster_handle, role, body) VALUES " . implode(",", $values), array());
+		
 		if(!Database::endTransaction($pass))
 		{
 			return 0;
@@ -85,6 +97,27 @@ abstract class AppPost {
 	// AppPost::edit($threadID, $postID, "Hey everyone! Edit: Oh yeah, check out my blog!");
 	{
 		return Database::query("UPDATE posts SET body=?, avi_id=? WHERE thread_id=? AND id=?", array($body, $aviID, $threadID, $postID));
+	}
+
+
+
+/****** Pull data from the recent posts list ******/
+	public static function getRecentPosts (
+		$uniID			// <int> The ID of the user.
+	)					// RETURNS <int:[str:mixed]> a list of data pulled from recent posts, array() on failure.
+	
+	// $recentPosts = AppPost::getRecentPosts();
+	{
+		// Check if you should purge any recent posts from the list
+		if(mt_rand(0, 200) == 22 or true)
+		{
+			if($delDate = (int) Database::selectValue("SELECT date_posted FROM posts_recent WHERE uni_id=? ORDER BY date_posted DESC LIMIT 6, 1", array($uniID)))
+			{
+				Database::query("DELETE FROM posts_recent WHERE uni_id=? AND date_posted <= ?", array($uniID, $delDate));
+			}
+		}
+		
+		return Database::selectMultiple("SELECT * FROM posts_recent WHERE uni_id=? ORDER BY date_posted DESC LIMIT 5", array($uniID));
 	}
 	
 }

@@ -57,7 +57,6 @@ if($editMode = (isset($_GET['edit']) ? true : false))
 
 // Sanitize the message
 $_POST['body'] = isset($_POST['body']) ? Security::purify($_POST['body']) : '';
-
 if(!$_POST['body'] and isset($post['body']))
 {
 	$_POST['body'] = $post['body'];
@@ -66,7 +65,7 @@ if(!$_POST['body'] and isset($post['body']))
 // Create the post
 if(Form::submitted(SITE_HANDLE . 'post-thrd'))
 {
-	FormValidate::text("Message", $_POST['body'], 1, 32000);
+	FormValidate::text("Message", $_POST['body'], 1, 32000, "/~");
 	
 	if(FormValidate::pass())
 	{
@@ -89,12 +88,13 @@ if(Form::submitted(SITE_HANDLE . 'post-thrd'))
 				header('Location: /thread?id=' . $threadID . '&page=' . $page . '#p' . $post['id']); exit;
 			}
 		}
-		
+
 		// Standard Post Mode
 		else if($postID = AppPost::create($threadID, Me::$id, $_POST['body'], (int) Me::$vals['avatar_opt']))
 		{
 			// Set this post as having been read by the poster
-			AppThread::markAsRead(Me::$id, $threadID);
+			// not needed due to redirect to thread
+			// AppThread::markAsRead(Me::$id, $threadID);
 		
 			// Get the list of users that this affects
 			$uniIDList = AppThread::getUniIDList($threadID);
@@ -168,7 +168,7 @@ if($editMode)
 echo '
 	' . UniMarkup::buttonLine() . '
 	<div style="padding:6px;">
-		<form class="uniform" action="/post?&id=' . $threadID . ($editMode ? "&edit=" . $_GET['edit'] : "") . '" method="post" style="padding-right:20px;">' . Form::prepare(SITE_HANDLE . 'post-thrd') . '
+		<form class="uniform" action="/post?id=' . $threadID . ($editMode ? "&edit=" . $_GET['edit'] : "") . '" method="post" style="padding-right:20px;">' . Form::prepare(SITE_HANDLE . 'post-thrd') . '
 			<textarea id="core_text_box" name="body" placeholder="Enter your message here . . ." style="resize:vertical; width:100%; height:300px;" tabindex="10" autofocus>' . $_POST['body'] . '</textarea>
 			' . $choose . '
 			<div style="margin-top:10px;"><input type="button" value="Preview" onclick="previewPost();"/> <input type="submit" name="submit" value="Post to Thread" /></div>

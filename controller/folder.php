@@ -23,7 +23,7 @@ $postsPerPage = 20;
 
 if($page > 1)
 {
-	$pageList = '<a href="/folder?id=' . $folderID . '&page=' . ($page - 1) . '"><span class="icon-arrow-left"></span> Previous Page</a>';
+	$pageList .= '<a href="/folder?id=' . $folderID . '&page=' . ($page - 1) . '"><span class="icon-arrow-left"></span> Previous Page</a>';
 }
 
 $socialURL = URL::social_unifaction_com();
@@ -33,7 +33,11 @@ $threads = AppFolder::getThreads($folderID, $page, $threadsToShow);
 
 if(count($threads) > $threadsToShow)
 {
-	$pageList = '<a href="/folder?id=' . $folderID . '&page=' . ($page + 1) . '">Next Page <span class="icon-arrow-right"></span></a>';
+	if($page > 1)
+	{
+		$pageList .= ' ';
+	}
+	$pageList .= '<a href="/folder?id=' . $folderID . '&page=' . ($page + 1) . '">Next Page <span class="icon-arrow-right"></span></a>';
 	array_pop($threads);
 }
 
@@ -89,7 +93,7 @@ foreach($threads as $thread)
 		foreach($paginate->pages as $page)
 		{
 			$drawDesc .= '
-				<a href="/thread?id=' . $thread['id'] . 'page=' . $page . '"><span>' . $page . '</span></a>';
+				<a href="/thread?id=' . $thread['id'] . '&page=' . $page . '"><span>' . $page . '</span></a>';
 		}
 	}
 	
@@ -100,7 +104,7 @@ foreach($threads as $thread)
 	echo '
 	<div class="inner-line">
 		<div class="inner-name">
-			<a href="/thread?id=' . $thread['id'] . 'page=' . $page . '">' . (!$thread['is_read'] ? '<img src="' . CDN . '/images/new.png" /> ' :  '') . $thread['title'] . '</a> <a title="last post" href="/thread?id=' . $thread['id'] . '&page=last"><span class="icon-arrow-right"></span></a>
+			<a href="/thread?id=' . $thread['id'] . '">' . (!$thread['is_read'] ? '<img src="' . CDN . '/images/new.png" /> ' :  '') . $thread['title'] . '</a> <a title="last post" href="/thread?id=' . $thread['id'] . '&page=last"><span class="icon-arrow-right"></span></a>
 			<div class="inner-paginate">' . $drawDesc . '</div>
 		</div>
 		<div class="inner-posts">' . $thread['posts'] . '</div>
