@@ -56,7 +56,6 @@ if($editMode = (isset($_GET['edit']) ? true : false))
 }
 
 // Sanitize the message
-$_POST['body'] = isset($_POST['body']) ? Security::purify($_POST['body']) : '';
 if(!$_POST['body'] and isset($post['body']))
 {
 	$_POST['body'] = $post['body'];
@@ -65,7 +64,15 @@ if(!$_POST['body'] and isset($post['body']))
 // Create the post
 if(Form::submitted(SITE_HANDLE . 'post-thrd'))
 {
-	FormValidate::text("Message", $_POST['body'], 1, 32000, "/~");
+	$_POST['body'] = isset($_POST['body']) ? Security::purify($_POST['body']) : '';
+	if(strlen($_POST['body']) < 1)
+	{
+		Alert::error("Post Length", "Please enter a message.");
+	}
+	elseif(strlen($_POST['body']) > 32000)
+	{
+		Alert::error("Post Length", "Your post length may not exceed 32000 characters.");
+	}
 	
 	if(FormValidate::pass())
 	{

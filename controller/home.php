@@ -87,7 +87,7 @@ if($recentPosts = AppPost::getRecentPosts(Me::$id))
 		echo '
 			<div class="inner-line">
 				<div class="inner-name">
-					<a href="' . $post['post_link'] . '?page=' . $onpage . '#p' . $post['post_id'] . '">' . $post['thread_title'] . '</a>
+					<a href="' . $post['post_link'] . '&page=' . $onpage . '#p' . $post['post_id'] . '">' . $post['thread_title'] . '</a>
 					<div class="inner-desc">' . html_entity_decode($post['body']) . '</div>
 				</div>
 				<div class="inner-details"><a ' . ($post['role'] != '' ? 'class="role-' . $post['role'] . '" ' : '') . 'href="' . URL::unifaction_social() . '/' . $post['poster_handle'] . '">@' . $post['poster_handle'] . '</a> - ' . Time::fuzzy((int) $post['date_posted']) . '<div style="margin-top:6px;">' . $post['thread_posts'] . ' Posts</div></div>

@@ -30,6 +30,15 @@ if(Form::submitted(SITE_HANDLE . '-folder-thrd'))
 	$_POST['title'] = trim($_POST['title']);
 	$_POST['body'] = trim($_POST['body']);
 	FormValidate::text("Title", $_POST['title'], 1, 48);
+	$_POST['body'] = isset($_POST['body']) ? Security::purify($_POST['body']) : '';
+	if(strlen($_POST['body']) < 1)
+	{
+		Alert::error("Post Length", "Please enter a message.");
+	}
+	elseif(strlen($_POST['body']) > 32000)
+	{
+		Alert::error("Post Length", "Your post length may not exceed 32000 characters.");
+	}
 	
 	if(strlen($_POST['body']) < 1)
 	{
