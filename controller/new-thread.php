@@ -21,7 +21,6 @@ if(!isset($_GET['folder']) or !$folder = AppFolder::get(Me::$id, (int) $_GET['fo
 // Recognize Integers
 $folderID = (int) $folder['folder_id'];
 
-// Prepare Variables
 $_POST['body'] = isset($_POST['body']) ? Security::purify($_POST['body']) : '';
 
 // Create the thread
@@ -30,7 +29,6 @@ if(Form::submitted(SITE_HANDLE . '-folder-thrd'))
 	$_POST['title'] = trim($_POST['title']);
 	$_POST['body'] = trim($_POST['body']);
 	FormValidate::text("Title", $_POST['title'], 1, 48);
-	$_POST['body'] = isset($_POST['body']) ? Security::purify($_POST['body']) : '';
 	if(strlen($_POST['body']) < 1)
 	{
 		Alert::error("Post Length", "Please enter a message.");
@@ -38,11 +36,6 @@ if(Form::submitted(SITE_HANDLE . '-folder-thrd'))
 	elseif(strlen($_POST['body']) > 32000)
 	{
 		Alert::error("Post Length", "Your post length may not exceed 32000 characters.");
-	}
-	
-	if(strlen($_POST['body']) < 1)
-	{
-		Alert::error("Message", "Please enter a message.");
 	}
 	
 	// Get the list of users that were send in "To"
@@ -135,7 +128,6 @@ if(Form::submitted(SITE_HANDLE . '-folder-thrd'))
 }
 else
 {
-	// Final Sanitization ($_POST['body'] was done above with full purification)
 	$_POST['to'] = (isset($_POST['to']) ? Sanitize::variable($_POST['to'], "@, ") : "");
 	$_POST['title'] = (isset($_POST['title']) ? Sanitize::safeword($_POST['title']) : "");
 }
