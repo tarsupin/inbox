@@ -56,6 +56,7 @@ if($editMode = (isset($_GET['edit']) ? true : false))
 }
 
 // Sanitize the message
+$_POST['body'] = isset($_POST['body']) ? Security::purify($_POST['body']) : '';
 if(!$_POST['body'] and isset($post['body']))
 {
 	$_POST['body'] = $post['body'];
@@ -64,7 +65,6 @@ if(!$_POST['body'] and isset($post['body']))
 // Create the post
 if(Form::submitted(SITE_HANDLE . 'post-thrd'))
 {
-	$_POST['body'] = isset($_POST['body']) ? Security::purify($_POST['body']) : '';
 	if(strlen($_POST['body']) < 1)
 	{
 		Alert::error("Post Length", "Please enter a message.");

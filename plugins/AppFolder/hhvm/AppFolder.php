@@ -27,7 +27,7 @@ abstract class AppFolder {
 	
 	// $folderData = AppFolder::get($uniID, $folderID);
 	{
-		return Database::selectOne("SELECT * FROM folders f INNER JOIN users u ON f.last_poster=u.uni_id WHERE f.uni_id=? AND folder_id=? LIMIT 1", array($uniID, $folderID));
+		return Database::selectOne("SELECT * FROM folders WHERE uni_id=? AND folder_id=? LIMIT 1", array($uniID, $folderID));
 	}
 	
 	

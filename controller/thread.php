@@ -230,6 +230,11 @@ foreach($posts as $post)
 	$uniID = (int) $post['uni_id'];
 	$aviID = (int) $post['avi_id'];
 	
+	// fallback if the participant no longer has this PM in their inbox
+	if(!isset($userList[$uniID]))
+		$userList[$uniID] = User::get($uniID, "uni_id, handle, display_name, role");
+	
+	
 	// Prepare the differences between AVATAR and PROFILE sites
 	if($aviID)
 	{
