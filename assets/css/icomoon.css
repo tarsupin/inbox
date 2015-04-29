@@ -19,6 +19,15 @@
 	-moz-osx-font-smoothing: grayscale;
 }
 
+.icon-text-edit:before {
+	content: "\e63e";
+}
+.icon-rocket:before {
+	content: "\e63f";
+}
+.icon-nooch:before {
+	content: "\e640";
+}
 .icon-music:before {
 	content: "\f001";
 }
@@ -273,4 +282,24 @@
 }
 .icon-console:before {
 	content: "\e63b";
+}
+
+/* Custom Icons */
+.icon-strikethrough:before {
+	content: "S";
+}
+.icon-strikethrough {
+	text-decoration: line-through;
+}
+.icon-size:before {
+	content: "a";
+	font-size:50%;
+	position:relative;
+	left:0.9em;
+}
+.icon-size:after {
+	content: "A";
+}
+.icon-size {
+	margin-left:-0.25em;
 }

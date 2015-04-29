@@ -257,8 +257,8 @@ foreach($posts as $post)
 			<div class="post-status">
 				<div class="post-status-top">' . (lcfirst($userList[$uniID]['display_name']) != lcfirst($userList[$uniID]['handle']) ? $userList[$uniID]['display_name'] . ' ' : '') . '<a ' . ($userList[$uniID]['role'] != '' ? 'class="role-' . $userList[$uniID]['role'] . '" ' : '') . 'href="' . $social . '/' . $userList[$uniID]['handle'] . '">@' . $userList[$uniID]['handle'] . '</a>' . (!in_array($avatarName[$uniID][$aviID], array('', $userList[$uniID]['display_name'], lcfirst($userList[$uniID]['display_name']))) ? ' (' . $avatarName[$uniID][$aviID] . ')' : '') . '</div>
 				<div class="post-status-bottom">					
-					<div><a href="/thread?id=' . $threadID . '&page=' . $_GET['page'] . '#p' . $post['id'] . '"><span class="icon-link"></span></a> <span title="' . date("M j, Y g:ia", $post['date_post']) . ' UniTime">Posted ' . Time::fuzzy((int) $post['date_post']) . '</span></div>
-					<div style="margin-top:6px;"><span class="icon-clock"></span> Joined ' . Time::fuzzy((int) $post['date_joined']) . '</div>
+					<div><a href="/thread?id=' . $threadID . '&page=' . $_GET['page'] . '#p' . $post['id'] . '"><span class="icon-link"></span></a> <span title="' . date("M j, Y g:ia", $post['date_post']) . '" onclick="this.nextSibling.style.display=(this.nextSibling.style.display == \'none\' ? \'block\' : \'none\');">Posted ' . Time::fuzzy((int) $post['date_post']) . '</span><span style="display:none;">' . date("M j, Y g:ia", $post['date_post']) . '</span></div>
+					<div style="margin-top:6px;"><span class="icon-clock"></span> Joined ' . date("M j, Y g:ia", $post['date_joined']) . '</div>
 				</div>
 			</div>
 		</div>
