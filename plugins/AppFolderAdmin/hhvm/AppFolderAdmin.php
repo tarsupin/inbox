@@ -176,7 +176,7 @@ abstract class AppFolderAdmin {
 		// Delete the Post
 		if($pass = Database::query("DELETE FROM posts WHERE thread_id=? AND id=? AND uni_id=? LIMIT 1", array($threadID, $postID, $uniID)))
 		{
-			$postCount = (int) Database::selectValue("SELECT COUNT(*) as totalNum FROM posts WHERE thread_id=? AND uni_id=? LIMIT 1", array($threadID, $uniID));
+			$postCount = (int) Database::selectValue("SELECT COUNT(*) as totalNum FROM posts WHERE thread_id=? LIMIT 1", array($threadID));
 
 			if($postCount > 0)
 			{

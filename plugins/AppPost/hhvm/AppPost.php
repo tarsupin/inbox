@@ -71,9 +71,9 @@ abstract class AppPost {
 		$values = array();
 		foreach($threadUsers as $user)
 		{
-			$values[] = '(' . $user['uni_id'] . ', ' . $timestamp . ', "' . $thread['title'] . '", ' . $thread['posts'] . ', "/thread?id=' . $threadID . '", ' . $postID . ', "' . $userData['handle'] . '", "' . $userData['role'] . '", "' . substr(UniMarkup::strip($body), 0, 255) . '")';
+			$values[] = '(' . $user['uni_id'] . ', ' . $timestamp . ', "' . $thread['title'] . '", ' . $thread['posts'] . ', "/thread?id=' . $threadID . '", ' . $postID . ', "' . $userData['handle'] . '", "' . $userData['role'] . '", "' . addslashes(substr(UniMarkup::strip($body), 0, 255)) . '")';
 		}
-		
+
 		Database::query("INSERT INTO posts_recent (uni_id, date_posted, thread_title, thread_posts, post_link, post_id, poster_handle, role, body) VALUES " . implode(",", $values), array());
 		
 		if(!Database::endTransaction($pass))

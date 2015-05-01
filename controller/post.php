@@ -178,7 +178,7 @@ echo '
 		<form class="uniform" action="/post?id=' . $threadID . ($editMode ? "&edit=" . $_GET['edit'] : "") . '" method="post" style="padding-right:20px;">' . Form::prepare(SITE_HANDLE . 'post-thrd') . '
 			<textarea id="core_text_box" name="body" placeholder="Enter your message here . . ." style="resize:vertical; width:100%; height:300px;" tabindex="10" autofocus>' . $_POST['body'] . '</textarea>
 			' . $choose . '
-			<div style="margin-top:10px;"><input type="button" value="Preview" onclick="previewPost();"/> <input type="submit" name="submit" value="Post to Thread" /></div>
+			<div style="margin-top:10px;"><input type="button" value="Preview" onclick="previewPost();"/> <input type="submit" name="submit" value="Send Message" /></div>
 			<div id="preview" class="thread-post" style="display:none; padding:4px; margin-top:10px;"></div>
 		</form>
 	</div>
