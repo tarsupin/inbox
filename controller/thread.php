@@ -218,7 +218,7 @@ foreach($threadUsers as $tUsr)
 {
 	$userList[$tUsr['uni_id']] = $tUsr;
 	echo '
-	<div class="participant"><a href="' . $social . '/' . $tUsr['handle'] . '"><img src="' . ProfilePic::image((int) $tUsr['uni_id'], "large") . '" /></a><br /><a ' . ($tUsr['role'] != '' ? 'class="role-' . $tUsr['role'] . '" ' : '') . 'href="/' . $tUsr['handle'] . '">@' . $tUsr['handle'] . '</a></div>';
+	<div class="participant"><a href="' . $social . '/' . $tUsr['handle'] . '"><img src="' . ProfilePic::image((int) $tUsr['uni_id'], "large") . '" /></a><br /><a ' . ($tUsr['role'] != '' ? 'class="role-' . $tUsr['role'] . '" ' : '') . 'href="' . $social . '/' . $tUsr['handle'] . '">@' . $tUsr['handle'] . '</a></div>';
 }
 	
 echo '

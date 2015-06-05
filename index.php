@@ -13,7 +13,7 @@ Me::$getColumns = "uni_id, role, clearance, handle, display_name, date_joined, a
 Me::initialize();
 
 // Base style sheet for this site
-Metadata::addHeader('<link rel="stylesheet" href="' . CDN . '/css/unifaction-2col.css" />');
+Metadata::addHeader('<link rel="stylesheet" href="' . CDN . '/css/unifaction-2col.css" /><link rel="stylesheet" href="' . CDN . '/css/unifaction-text.css" />');
 
 // Determine which page you should point to, then load it
 require(SYS_PATH . "/routes.php");
